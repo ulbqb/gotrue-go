@@ -1,3 +1,3 @@
 # Gotrue-go
 
-Unofficial Go client of Supabase fork of Gotrue.
+Unofficial Go client for Supabase fork of Gotrue.
