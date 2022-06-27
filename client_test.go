@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"go.lair.cx/gotrue-go/gotrueapi"
-	"go.lair.cx/gotrue-go/internal/testdata"
+	"github.com/ulbqb/gotrue-go/gotrueapi"
+	"github.com/ulbqb/gotrue-go/internal/testdata"
 )
 
 var (

@@ -1,4 +1,4 @@
-module go.lair.cx/gotrue-go
+module github.com/ulbqb/gotrue-go
 
 go 1.17
 

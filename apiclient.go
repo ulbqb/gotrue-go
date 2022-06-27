@@ -10,7 +10,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/valyala/bytebufferpool"
 
-	"go.lair.cx/gotrue-go/gotrueapi"
+	"github.com/ulbqb/gotrue-go/gotrueapi"
 )
 
 type APIClient struct {
