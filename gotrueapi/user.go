@@ -6,10 +6,10 @@ import (
 	"github.com/ulbqb/gotrue-go/internal/reqbuilder"
 )
 
-func GetUser(host, accessToken string) (*http.Request, error) {
+func GetUser(host string, headers map[string]string) (*http.Request, error) {
 	return reqbuilder.New().
 		Method("GET").
-		Headers("Authorization", "Bearer "+accessToken).
+		Headers(headers).
 		Host(host).
 		Path("/user").
 		Build()
@@ -23,12 +23,12 @@ type PutUserParams struct {
 	Phone    string                 `json:"phone"`
 }
 
-func PutUser(host, accessToken string, params *PutUserParams) (*http.Request, error) {
+func PutUser(host string, headers map[string]string, params *PutUserParams) (*http.Request, error) {
 	return reqbuilder.New().
 		Method("PUT").
 		Host(host).
 		Path("/user").
-		Headers("Authorization", "Bearer "+accessToken).
+		Headers(headers).
 		Body(params).
 		Build()
 }

@@ -16,13 +16,14 @@ type RecoverParams struct {
 	RedirectTo string `json:"-"`
 }
 
-func Recover(host string, params *RecoverParams) (*http.Request, error) {
+func Recover(host string, headers map[string]string, params *RecoverParams) (*http.Request, error) {
 	if len(params.Email) == 0 {
 		return nil, errors.New("api: email should be provided")
 	}
 
 	return reqbuilder.New().
 		Method("POST").
+		Headers(headers).
 		Host(host).
 		Path("/recover").
 		Body(params).

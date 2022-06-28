@@ -19,7 +19,7 @@ type SignUpParams struct {
 	RedirectTo string `json:"-"`
 }
 
-func SignUp(host string, params *SignUpParams) (*http.Request, error) {
+func SignUp(host string, headers map[string]string, params *SignUpParams) (*http.Request, error) {
 	if len(params.Email) > 0 && len(params.Phone) > 0 {
 		return nil, errors.New("api: email and phone were provided at the same time")
 	}
@@ -32,6 +32,7 @@ func SignUp(host string, params *SignUpParams) (*http.Request, error) {
 
 	return reqbuilder.New().
 		Method("POST").
+		Headers(headers).
 		Host(host).
 		Path("/signup").
 		Queries("redirect_to", params.RedirectTo).

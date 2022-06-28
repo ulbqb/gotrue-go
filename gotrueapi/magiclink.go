@@ -16,13 +16,14 @@ type MagicLinkParams struct {
 	RedirectTo string `json:"-"`
 }
 
-func MagicLink(host string, params *MagicLinkParams) (*http.Request, error) {
+func MagicLink(host string, headers map[string]string, params *MagicLinkParams) (*http.Request, error) {
 	if len(params.Email) == 0 {
 		return nil, errors.New("api: email should be provided")
 	}
 
 	return reqbuilder.New().
 		Method("POST").
+		Headers(headers).
 		Host(host).
 		Path("/magiclink").
 		Body(params).
