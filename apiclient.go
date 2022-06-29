@@ -30,7 +30,7 @@ func NewAPIClient(url string) *APIClient {
 }
 
 func (c *APIClient) AppendHeaders(headers Headers) {
-	for k, v := range c.baseHeaders {
+	for k, v := range headers {
 		c.baseHeaders[k] = v
 	}
 }
