@@ -14,7 +14,7 @@ type TokenWithPasswordGrantParams struct {
 	Password string `json:"password"`
 }
 
-func TokenWithPasswordGrant(host string, params *TokenWithPasswordGrantParams) (*http.Request, error) {
+func TokenWithPasswordGrant(host string, headers map[string]string, params *TokenWithPasswordGrantParams) (*http.Request, error) {
 	if len(params.Email) > 0 && len(params.Phone) > 0 {
 		return nil, errors.New("api: email and phone were provided at the same time")
 	}
@@ -24,6 +24,7 @@ func TokenWithPasswordGrant(host string, params *TokenWithPasswordGrantParams) (
 
 	return reqbuilder.New().
 		Method("POST").
+		Headers(headers).
 		Host(host).
 		Path("/token").
 		Queries("grant_type", "password").
@@ -35,9 +36,10 @@ type TokenWithRefreshTokenGrantParams struct {
 	RefreshToken string `json:"refresh_token"`
 }
 
-func TokenWithRefreshTokenGrant(host string, params *TokenWithRefreshTokenGrantParams) (*http.Request, error) {
+func TokenWithRefreshTokenGrant(host string, headers map[string]string, params *TokenWithRefreshTokenGrantParams) (*http.Request, error) {
 	return reqbuilder.New().
 		Method("POST").
+		Headers(headers).
 		Host(host).
 		Path("/token").
 		Queries("grant_type", "refresh_token").
@@ -53,9 +55,10 @@ type TokenWithIDTokenGrantParams struct {
 	RedirectTo string `json:"-"`
 }
 
-func TokenWithIDTokenGrant(host string, params *TokenWithIDTokenGrantParams) (*http.Request, error) {
+func TokenWithIDTokenGrant(host string, headers map[string]string, params *TokenWithIDTokenGrantParams) (*http.Request, error) {
 	return reqbuilder.New().
 		Method("POST").
+		Headers(headers).
 		Host(host).
 		Path("/token").
 		Queries("grant_type", "refresh_token").

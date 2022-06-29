@@ -18,7 +18,7 @@ type OTPParams struct {
 	RedirectTo string `json:"-"`
 }
 
-func OTP(host string, params *OTPParams) (*http.Request, error) {
+func OTP(host string, headers map[string]string, params *OTPParams) (*http.Request, error) {
 	if len(params.Email) > 0 && len(params.Phone) > 0 {
 		return nil, errors.New("api: email and phone were provided at the same time")
 	}
@@ -28,6 +28,7 @@ func OTP(host string, params *OTPParams) (*http.Request, error) {
 
 	return reqbuilder.New().
 		Method("POST").
+		Headers(headers).
 		Host(host).
 		Path("/otp").
 		Queries("redirect_to", params.RedirectTo).

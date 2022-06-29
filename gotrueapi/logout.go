@@ -6,10 +6,10 @@ import (
 	"github.com/ulbqb/gotrue-go/internal/reqbuilder"
 )
 
-func Logout(host string, accessToken string) (*http.Request, error) {
+func Logout(host string, headers map[string]string) (*http.Request, error) {
 	return reqbuilder.New().
 		Method("POST").
-		Headers("Authorization", "Bearer "+accessToken).
+		Headers(headers).
 		Host(host).
 		Path("/logout").
 		Build()

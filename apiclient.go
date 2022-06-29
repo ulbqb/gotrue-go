@@ -14,13 +14,15 @@ import (
 )
 
 type APIClient struct {
-	baseURL string
-	http    *http.Client
+	baseURL     string
+	baseHeaders Headers
+	http        *http.Client
 }
 
 func NewAPIClient(url string) *APIClient {
 	return &APIClient{
-		baseURL: url,
+		baseURL:     url,
+		baseHeaders: Headers{},
 		http: &http.Client{
 			Timeout: 5 * time.Second,
 		},
@@ -68,7 +70,7 @@ func (c *APIClient) SignUp(params *gotrueapi.SignUpParams) (*gotrueapi.Session, 
 		*gotrueapi.User
 	}
 
-	err := c.do(gotrueapi.SignUp(c.baseURL, params))(&resp)
+	err := c.do(gotrueapi.SignUp(c.baseURL, c.baseHeaders, params))(&resp)
 	if err != nil {
 		return nil, err
 	}
@@ -83,7 +85,7 @@ func (c *APIClient) SignUp(params *gotrueapi.SignUpParams) (*gotrueapi.Session, 
 func (c *APIClient) IssueTokenWithPassword(params *gotrueapi.TokenWithPasswordGrantParams) (*gotrueapi.Session, error) {
 	var resp gotrueapi.Session
 
-	err := c.do(gotrueapi.TokenWithPasswordGrant(c.baseURL, params))(&resp)
+	err := c.do(gotrueapi.TokenWithPasswordGrant(c.baseURL, c.baseHeaders, params))(&resp)
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +96,7 @@ func (c *APIClient) IssueTokenWithPassword(params *gotrueapi.TokenWithPasswordGr
 func (c *APIClient) IssueTokenWithRefreshToken(params *gotrueapi.TokenWithRefreshTokenGrantParams) (*gotrueapi.Session, error) {
 	var resp gotrueapi.Session
 
-	err := c.do(gotrueapi.TokenWithRefreshTokenGrant(c.baseURL, params))(&resp)
+	err := c.do(gotrueapi.TokenWithRefreshTokenGrant(c.baseURL, c.baseHeaders, params))(&resp)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +107,7 @@ func (c *APIClient) IssueTokenWithRefreshToken(params *gotrueapi.TokenWithRefres
 func (c *APIClient) IssueTokenWithIDToken(params *gotrueapi.TokenWithIDTokenGrantParams) (*gotrueapi.Session, error) {
 	var resp gotrueapi.Session
 
-	err := c.do(gotrueapi.TokenWithIDTokenGrant(c.baseURL, params))(&resp)
+	err := c.do(gotrueapi.TokenWithIDTokenGrant(c.baseURL, c.baseHeaders, params))(&resp)
 	if err != nil {
 		return nil, err
 	}
@@ -114,25 +116,25 @@ func (c *APIClient) IssueTokenWithIDToken(params *gotrueapi.TokenWithIDTokenGran
 }
 
 func (c *APIClient) SignOut(accessToken string) error {
-	return c.do(gotrueapi.Logout(c.baseURL, accessToken))(nil)
+	return c.do(gotrueapi.Logout(c.baseURL, c.createRequestHeaders(accessToken)))(nil)
 }
 
 func (c *APIClient) SendMagicLinkEmail(params *gotrueapi.MagicLinkParams) error {
-	return c.do(gotrueapi.MagicLink(c.baseURL, params))(nil)
+	return c.do(gotrueapi.MagicLink(c.baseURL, c.baseHeaders, params))(nil)
 }
 
 func (c *APIClient) SendMobileOTP(params *gotrueapi.OTPParams) error {
-	return c.do(gotrueapi.OTP(c.baseURL, params))(nil)
+	return c.do(gotrueapi.OTP(c.baseURL, c.baseHeaders, params))(nil)
 }
 
 func (c *APIClient) ResetPasswordForEmail(params *gotrueapi.RecoverParams) error {
-	return c.do(gotrueapi.Recover(c.baseURL, params))(nil)
+	return c.do(gotrueapi.Recover(c.baseURL, c.baseHeaders, params))(nil)
 }
 
 func (c *APIClient) GetUser(accessToken string) (*gotrueapi.User, error) {
 	var resp gotrueapi.User
 
-	err := c.do(gotrueapi.GetUser(c.baseURL, accessToken))(&resp)
+	err := c.do(gotrueapi.GetUser(c.baseURL, c.createRequestHeaders(accessToken)))(&resp)
 	if err != nil {
 		return nil, err
 	}
@@ -143,7 +145,7 @@ func (c *APIClient) GetUser(accessToken string) (*gotrueapi.User, error) {
 func (c *APIClient) UpdateUser(accessToken string, params *gotrueapi.PutUserParams) (*gotrueapi.User, error) {
 	var resp gotrueapi.User
 
-	err := c.do(gotrueapi.PutUser(c.baseURL, accessToken, params))(&resp)
+	err := c.do(gotrueapi.PutUser(c.baseURL, c.createRequestHeaders(accessToken), params))(&resp)
 	if err != nil {
 		return nil, err
 	}
@@ -164,4 +166,10 @@ func (c *APIClient) GetProviderSignInURL(provider Provider, redirectTo, scopes s
 	pathBuf.B = append(pathBuf.B, scopes...)
 
 	return string(pathBuf.B)
+}
+
+func (c *APIClient) createRequestHeaders(accessToken string) Headers {
+	headers := c.baseHeaders.Copy()
+	headers["Authorization"] = "Bearer " + accessToken
+	return headers
 }

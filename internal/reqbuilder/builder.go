@@ -11,12 +11,12 @@ import (
 )
 
 type RequestBuilder struct {
-	method             string
-	host               string
-	path               string
-	headerKeyAndValues []string
-	queryKeyAndValues  []string
-	body               interface{}
+	method            string
+	host              string
+	path              string
+	headers           map[string]string
+	queryKeyAndValues []string
+	body              interface{}
 }
 
 func New() *RequestBuilder {
@@ -38,8 +38,8 @@ func (b *RequestBuilder) Path(path string) *RequestBuilder {
 	return b
 }
 
-func (b *RequestBuilder) Headers(keyAndValues ...string) *RequestBuilder {
-	b.headerKeyAndValues = append(b.headerKeyAndValues, keyAndValues...)
+func (b *RequestBuilder) Headers(headers map[string]string) *RequestBuilder {
+	b.headers = headers
 	return b
 }
 
@@ -96,8 +96,8 @@ func (b *RequestBuilder) Build() (*http.Request, error) {
 		return nil, errors.Wrap(err, "api: failed to create request object")
 	}
 
-	for i := 1; i < len(b.headerKeyAndValues); i += 2 {
-		req.Header.Add(b.headerKeyAndValues[i-1], b.headerKeyAndValues[i])
+	for k, v := range b.headers {
+		req.Header.Add(k, v)
 	}
 
 	req.Header.Set("Content-Type", "application/json;charset=utf-8")
