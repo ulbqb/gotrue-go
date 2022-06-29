@@ -15,13 +15,14 @@ import (
 
 type APIClient struct {
 	baseURL     string
-	baseHeaders map[string]string
+	baseHeaders Headers
 	http        *http.Client
 }
 
 func NewAPIClient(url string) *APIClient {
 	return &APIClient{
-		baseURL: url,
+		baseURL:     url,
+		baseHeaders: Headers{},
 		http: &http.Client{
 			Timeout: 5 * time.Second,
 		},
@@ -115,7 +116,7 @@ func (c *APIClient) IssueTokenWithIDToken(params *gotrueapi.TokenWithIDTokenGran
 }
 
 func (c *APIClient) SignOut(accessToken string) error {
-	return c.do(gotrueapi.Logout(c.baseURL, c.headers(accessToken)))(nil)
+	return c.do(gotrueapi.Logout(c.baseURL, c.createRequestHeaders(accessToken)))(nil)
 }
 
 func (c *APIClient) SendMagicLinkEmail(params *gotrueapi.MagicLinkParams) error {
@@ -133,7 +134,7 @@ func (c *APIClient) ResetPasswordForEmail(params *gotrueapi.RecoverParams) error
 func (c *APIClient) GetUser(accessToken string) (*gotrueapi.User, error) {
 	var resp gotrueapi.User
 
-	err := c.do(gotrueapi.GetUser(c.baseURL, c.headers(accessToken)))(&resp)
+	err := c.do(gotrueapi.GetUser(c.baseURL, c.createRequestHeaders(accessToken)))(&resp)
 	if err != nil {
 		return nil, err
 	}
@@ -144,7 +145,7 @@ func (c *APIClient) GetUser(accessToken string) (*gotrueapi.User, error) {
 func (c *APIClient) UpdateUser(accessToken string, params *gotrueapi.PutUserParams) (*gotrueapi.User, error) {
 	var resp gotrueapi.User
 
-	err := c.do(gotrueapi.PutUser(c.baseURL, c.headers(accessToken), params))(&resp)
+	err := c.do(gotrueapi.PutUser(c.baseURL, c.createRequestHeaders(accessToken), params))(&resp)
 	if err != nil {
 		return nil, err
 	}
@@ -167,11 +168,8 @@ func (c *APIClient) GetProviderSignInURL(provider Provider, redirectTo, scopes s
 	return string(pathBuf.B)
 }
 
-func (c *APIClient) headers(accessToken string) map[string]string {
-	headers := map[string]string{}
-	for k, v := range c.baseHeaders {
-		headers[k] = v
-	}
+func (c *APIClient) createRequestHeaders(accessToken string) Headers {
+	headers := c.baseHeaders.Copy()
 	headers["Authorization"] = "Bearer " + accessToken
 	return headers
 }
