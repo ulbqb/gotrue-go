@@ -6,7 +6,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"go.lair.cx/gotrue-go/gotrueapi"
+	"github.com/ulbqb/gotrue-go/gotrueapi"
 )
 
 type Client struct {

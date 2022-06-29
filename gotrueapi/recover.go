@@ -5,7 +5,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"go.lair.cx/gotrue-go/internal/reqbuilder"
+	"github.com/ulbqb/gotrue-go/internal/reqbuilder"
 )
 
 type RecoverParams struct {

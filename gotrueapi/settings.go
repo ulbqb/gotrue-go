@@ -3,7 +3,7 @@ package gotrueapi
 import (
 	"net/http"
 
-	"go.lair.cx/gotrue-go/internal/reqbuilder"
+	"github.com/ulbqb/gotrue-go/internal/reqbuilder"
 )
 
 func Settings(host string) (*http.Request, error) {
