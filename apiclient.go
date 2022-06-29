@@ -29,6 +29,12 @@ func NewAPIClient(url string) *APIClient {
 	}
 }
 
+func (c *APIClient) AppendHeaders(headers Headers) {
+	for k, v := range c.baseHeaders {
+		c.baseHeaders[k] = v
+	}
+}
+
 func (c *APIClient) do(req *http.Request, err error) func(out interface{}) error {
 	return func(out interface{}) error {
 		if err != nil {
