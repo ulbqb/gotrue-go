@@ -51,6 +51,8 @@ type TokenWithIDTokenGrantParams struct {
 	IdToken  string `json:"id_token"`
 	Nonce    string `json:"nonce"`
 	Provider string `json:"provider"`
+	ClientId string `json:"client_id"`
+	Issuer   string `json:"issuer"`
 
 	RedirectTo string `json:"-"`
 }
@@ -61,7 +63,7 @@ func TokenWithIDTokenGrant(host string, headers map[string]string, params *Token
 		Headers(headers).
 		Host(host).
 		Path("/token").
-		Queries("grant_type", "refresh_token").
+		Queries("grant_type", "id_token").
 		Queries("redirect_to", params.RedirectTo).
 		Body(params).
 		Build()
