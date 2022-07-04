@@ -14,7 +14,7 @@ type GoTrueClaims struct {
 	jwt.RegisteredClaims
 	Email        string                 `json:"email"`
 	Phone        string                 `json:"phone"`
-	AppMetaData  map[string]interface{} `json:"app_metadata"`
+	AppMetadata  map[string]interface{} `json:"app_metadata"`
 	UserMetaData map[string]interface{} `json:"user_metadata"`
 	Role         string                 `json:"role"`
 }

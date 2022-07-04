@@ -50,7 +50,7 @@ type User struct {
 
 	LastSignInAt *time.Time `json:"last_sign_in_at,omitempty"`
 
-	AppMetaData  map[string]interface{} `json:"app_metadata"`
+	AppMetadata  map[string]interface{} `json:"app_metadata"`
 	UserMetaData map[string]interface{} `json:"user_metadata"`
 
 	Identities []Identity `json:"identities" has_many:"identities"`
