@@ -19,7 +19,6 @@ type PutUserParams struct {
 	Email    string                 `json:"email"`
 	Password *string                `json:"password"`
 	Data     map[string]interface{} `json:"data"`
-	AppData  map[string]interface{} `json:"app_metadata,omitempty"`
 	Phone    string                 `json:"phone"`
 }
 
