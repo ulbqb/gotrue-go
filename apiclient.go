@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/valyala/bytebufferpool"
 
@@ -152,6 +153,17 @@ func (c *APIClient) UpdateUser(accessToken string, params *gotrueapi.PutUserPara
 	var resp gotrueapi.User
 
 	err := c.do(gotrueapi.PutUser(c.baseURL, c.createRequestHeaders(accessToken), params))(&resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &resp, nil
+}
+
+func (c *APIClient) UpdateUserById(uid uuid.UUID, params *gotrueapi.UpdateUserByIdParams) (*gotrueapi.User, error) {
+	var resp gotrueapi.User
+
+	err := c.do(gotrueapi.UpdateUserById(c.baseURL, c.baseHeaders, uid, params))(&resp)
 	if err != nil {
 		return nil, err
 	}
